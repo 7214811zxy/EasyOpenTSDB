@@ -1,10 +1,10 @@
-package org.opentsdb.client.util;
+package org.opentsdb.client.util.enumClass;
 
 /**
  * Created by shifeng on 2016/5/19.
  * MyProject
  */
-public enum Aggregator {
+public enum AggregatorEnum {
     avg,
     count,
     dev,
@@ -33,4 +33,6 @@ public enum Aggregator {
     p999,
     sum,
     zimsum,
+    first,
+    last
 }

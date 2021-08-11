@@ -1,4 +1,4 @@
-package org.opentsdb.client.util;
+package org.opentsdb.client.util.enumClass;
 
 /**
  * @author Peter Zhu (～￣(OO)￣)ブ

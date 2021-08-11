@@ -1,21 +1,13 @@
 package org.opentsdb.client;
 
-import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 import org.opentsdb.client.request.Filter;
-import org.opentsdb.client.request.QueryBuilder;
-import org.opentsdb.client.request.SubQueries;
-import org.opentsdb.client.response.SimpleHttpResponse;
-import org.opentsdb.client.tsdbPartner.EasyBaseQuery;
 import org.opentsdb.client.tsdbPartner.EasyQuery;
-import org.opentsdb.client.util.Aggregator;
-import org.opentsdb.client.util.FilterType;
+import org.opentsdb.client.util.enumClass.AggregatorEnum;
+import org.opentsdb.client.util.enumClass.FilterType;
 import org.opentsdb.client.util.TimeUtils;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -49,7 +41,7 @@ public class QueryTest {
         JSONArray queryRes = EasyQuery.query(
                 "http://flink01:4242",
                 "test724315",
-                Aggregator.none.toString(),
+                AggregatorEnum.none.toString(),
                 1627002000,
                 1627005600,
                 ExpectResponse.STATUS_CODE
@@ -77,7 +69,7 @@ public class QueryTest {
                 "http://flink01:4242",
                 "test724315",
                 filters,
-                Aggregator.sum.toString(),
+                AggregatorEnum.sum.toString(),
                 1627002000,
                 1633046400,
                 "0all-sum",
@@ -105,10 +97,10 @@ public class QueryTest {
                 "http://flink01:4242",
                 "test724315",
                 filters,
-                Aggregator.sum.toString(),
+                AggregatorEnum.sum.toString(),
                 1627002000,
                 1633046400,
-                "0all-sum",
+                "30s-sum",
                 ExpectResponse.STATUS_CODE
         );
         EasyQuery.printDps(queryRes);
@@ -133,7 +125,7 @@ public class QueryTest {
                 "http://flink01:4242",
                 "test724315",
                 filters,
-                Aggregator.sum.toString(),
+                AggregatorEnum.sum.toString(),
                 1627002000,
                 1633046400,
                 "0all-sum",
@@ -143,64 +135,46 @@ public class QueryTest {
     }
 
     /**
-     * 插值获取"上海南方"，从"2021-07-23 09:00:00" 到 "2021-07-23 10:00:00"的电价变化数据
-     * res 👉 "https://kdocs.cn/l/ccQRimYq2LbW[金山文档] openTSDB测试方案.xlsx"中的sheet2
-     *
-     * 关于插值 👉 http://opentsdb.net/docs/build/html/user_guide/query/aggregators.html
+     * 通用测试例
      */
     @Test
     public void queryTest05() {
+        List<Filter> filters = new ArrayList<Filter>(){{
+            add(new Filter(FilterType.literal_or.toString(), "group", "SHNF"));
+            add(new Filter(FilterType.wildcard.toString(), "plant", "*"));
+            add(new Filter(FilterType.wildcard.toString(), "class", "*"));
+            add(new Filter(FilterType.wildcard.toString(), "price", "*", true));
+        }};
         JSONArray queryRes = EasyQuery.query(
                 "http://flink01:4242",
-                "test951753",
-                Aggregator.sum.toString(),
-                1627004548,
-                1627004561,
+                "test724315",
+                filters,
+                AggregatorEnum.sum.toString(),
+                1627002000,
+                1627005600,
+                "1h-last",
                 ExpectResponse.STATUS_CODE
         );
         EasyQuery.printDps(queryRes);
     }
 
     /**
-     * 降采样获取"上海南方"，从"2021-07-23 09:00:00" 到 "2021-07-23 10:00:00"的电价变化数据
-     * res 👉 "https://kdocs.cn/l/ccQRimYq2LbW[金山文档] openTSDB测试方案.xlsx"中的"降采样查询测试1"
-     *
-     * 关于降采样 👉http://opentsdb.net/docs/build/html/user_guide/query/downsampling.html
-     */
-    @Test
-    public void queryTest06() {
-        JSONArray queryRes = EasyQuery.query(
-                "http://flink01:4242",
-                "test951753",
-                Aggregator.sum.toString(),
-                1627004548,
-                1627004561,
-                "3s-avg-zero",
-                ExpectResponse.STATUS_CODE
-        );
-        EasyQuery.printDps(queryRes);
-    }
-
-    /**
-     * 降采样获取"上海南方"，从"2021-07-23 09:00:00" 到 "2021-07-23 10:00:00"的电价变化数据
-     * res 👉 "https://kdocs.cn/l/ccQRimYq2LbW[金山文档] openTSDB测试方案.xlsx"中的"降采样查询测试2"
-     *
-     * 关于降采样 👉http://opentsdb.net/docs/build/html/user_guide/query/downsampling.html
+     * 具有降采用的通用测试例
      */
     @Test
     public void queryTest07() {
         List<Filter> filters = new ArrayList<Filter>(){{
-            add(new Filter(FilterType.literal_or.toString(), "group", "SHNF", false));
-            add(new Filter(FilterType.literal_or.toString(), "plant", "HK1", false));
+            add(new Filter(FilterType.literal_or.toString(), "group", "SHNF", true));
+            add(new Filter(FilterType.wildcard.toString(), "plant", "HK1", true));
         }};
         JSONArray queryRes = EasyQuery.query(
                 "http://flink01:4242",
                 "test951753",
                 filters,
-                Aggregator.sum.toString(),
+                AggregatorEnum.sum.toString(),
                 1627004548,
                 1627004561,
-                "10s-avg",
+                "10s-first",
                 ExpectResponse.STATUS_CODE
         );
         EasyQuery.printDps(queryRes);

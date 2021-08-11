@@ -2,6 +2,7 @@ package org.opentsdb.client;
 
 import org.junit.Test;
 import org.opentsdb.client.tsdbPartner.EasySuggest;
+import org.opentsdb.client.util.enumClass.TypeEnum;
 
 import java.util.List;
 
@@ -39,6 +40,24 @@ public class SuggestTest {
         System.out.println(res);
     }
 
+    /**
+     * 自定义查询
+     */
+    @Test
+    public void customSuggest1(){
+        List<Object> res = EasySuggest.getAnything("http://flink01:4242", TypeEnum.metrics, "test", 10);
+        System.out.println(res);
+    }
+
+    /**
+     * 自定义查询
+     */
+    @Test
+    public void customSuggest2(){
+        List<Object> res = EasySuggest.getAnything("http://flink01:4242", TypeEnum.tagk, "plant", 10);
+        System.out.println(res);
+    }
+
     @Test
     public void getAllUIDName(){
         System.out.println("\n----------------Metric----------------");
@@ -50,4 +69,5 @@ public class SuggestTest {
         System.out.println("\n----------------TagValue----------------");
         getTagValuesTest();
     }
+
 }

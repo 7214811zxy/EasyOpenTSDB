@@ -3,10 +3,8 @@ package org.opentsdb.client;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONArray;
 import org.junit.Test;
-import org.opentsdb.client.ExpectResponse;
 import org.opentsdb.client.tsdbPartner.EasyDelete;
-import org.opentsdb.client.tsdbPartner.EasyQuery;
-import org.opentsdb.client.util.Aggregator;
+import org.opentsdb.client.util.enumClass.AggregatorEnum;
 
 /**
  * @author Peter Zhu (～￣(OO)￣)ブ
@@ -27,7 +25,7 @@ public class DeleteTest {
         JSONArray deleteRes = EasyDelete.delete(
                 "http://flink01:4242",
                 "test724315",
-                Aggregator.none.toString(),
+                AggregatorEnum.none.toString(),
                 946684800,
                 1633046400,
                 ExpectResponse.STATUS_CODE

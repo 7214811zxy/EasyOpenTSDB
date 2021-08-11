@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.opentsdb.client.HttpClientImpl;
 import org.opentsdb.client.request.SuggestBuilder;
 import org.opentsdb.client.response.SimpleHttpResponse;
+import org.opentsdb.client.util.enumClass.TypeEnum;
 
 import java.io.IOException;
 
@@ -34,13 +35,31 @@ public class EasySuggest {
     }
 
     /**
+     *
+     * This endpoint provides a means of implementing an “auto-complete” call that can be accessed repeatedly as a user types a request in a GUI.
+     *
+     * @param tsdAddress tsd server address
+     * @param type The type of data to auto complete on. Must be one of the following: metrics, tagk or tagv
+     * @param queryString A string to match on for the given type
+     * @param max The maximum number of suggested results to return. Must be greater than 0
+     * @return String[]
+     */
+    public static List<Object> getAnything(String tsdAddress, TypeEnum type, String queryString, Integer max){
+        SuggestBuilder builder = SuggestBuilder.getInstance();
+        builder.getSuggest().setType(type.toString());
+        builder.getSuggest().setMax(max);
+        builder.getSuggest().setQuery(queryString);
+        return getResponse(tsdAddress, builder);
+    }
+
+    /**
      * Get all metrics list
      * @param tsdAddress tsd server address
      * @return metrics list
      */
     public static List<Object> getMetrics(String tsdAddress){
         SuggestBuilder builder = SuggestBuilder.getInstance();
-        builder.getSuggest().setType("metrics");
+        builder.getSuggest().setType(TypeEnum.metrics.toString());
         return getResponse(tsdAddress, builder);
     }
 
@@ -51,7 +70,7 @@ public class EasySuggest {
      */
     public static List<Object> getTagNames(String tsdAddress){
         SuggestBuilder builder = SuggestBuilder.getInstance();
-        builder.getSuggest().setType("tagk");
+        builder.getSuggest().setType(TypeEnum.tagk.toString());
         return getResponse(tsdAddress, builder);
     }
 
@@ -62,7 +81,7 @@ public class EasySuggest {
      */
     public static List<Object> getTagValues(String tsdAddress){
         SuggestBuilder builder = SuggestBuilder.getInstance();
-        builder.getSuggest().setType("tagv");
+        builder.getSuggest().setType(TypeEnum.tagv.toString());
         return getResponse(tsdAddress, builder);
     }
 

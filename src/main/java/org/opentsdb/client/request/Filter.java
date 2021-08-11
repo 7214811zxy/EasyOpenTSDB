@@ -21,4 +21,10 @@ public class Filter {
         this.filter = filter;
         this.groupBy = groupBy;
     }
+
+    public Filter(String type, String tagk, String filter) {
+        this.type = type;
+        this.tagk = tagk;
+        this.filter = filter;
+    }
 }
